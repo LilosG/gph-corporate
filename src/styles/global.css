@@ -1,0 +1,135 @@
+/* ─── Google Fonts ─────────────────────────────────────────
+   Deliberately not the Park101 pairing (Barlow Condensed/Inter) or
+   the Jost pairing tried on Cococabana. GPH sits above six visually
+   distinct venues — this needs its own editorial voice, not a skin.
+   Must precede @import "tailwindcss" — CSS spec requirement.
+   ────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  /* ─── Brand palette — neutral/editorial, deliberately restrained.
+     No venue color competes here. Ink on paper; brass is the one
+     accent, used sparingly for CTAs. Photography carries the color.
+     ────────────────────────────────────────────────────────────── */
+  --color-brand-ink:         #1A1A17;
+  --color-brand-ink-light:   #33322D;
+  --color-brand-paper:       #F7F3EA;
+  --color-brand-paper-dark:  #EBE4D4;
+  --color-brand-white:       #FFFFFF;
+  --color-brand-brass:       #9C7A3C;
+  --color-brand-brass-dark:  #7E6230;
+  --color-brand-brass-light: #B79459;
+
+  /* ─── Typography — Font Families ───────────────────────── */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-accent:  'Fraunces', Georgia, serif;   /* italic variant, no second accent font needed */
+  --font-mono:    'JetBrains Mono', monospace;   /* stat band / data — shared infra, not a brand signal */
+
+  /* ─── Fluid Typography Scale ────────────────────────────── */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+  --text-4xl:  2.25rem;
+  --text-5xl:  3rem;
+  --text-6xl:  3.75rem;
+
+  --text-hero:       clamp(3rem, 7vw, 6rem);
+  --text-section-xl: clamp(2.25rem, 5vw, 4rem);
+  --text-section:    clamp(1.875rem, 3.5vw, 2.75rem);
+  --text-editorial:  clamp(1.1rem, 1.5vw, 1.3rem);
+
+  /* ─── Line Heights / Tracking ───────────────────────────── */
+  --leading-display: 0.98;
+  --leading-tight:   1.15;
+  --tracking-eyebrow: 0.28em;
+  --tracking-label:   0.2em;
+  --tracking-cta:     0.15em;
+
+  /* ─── Min Heights / Aspect Ratios ───────────────────────── */
+  --min-h-hero:  100svh;
+  --min-h-panel: 60vh;
+  --aspect-venue:    4 / 3;
+  --aspect-portrait: 3 / 4;
+
+  /* ─── Spacing / Radius / Motion ──────────────────────────── */
+  --spacing-section:    5rem;
+  --spacing-section-lg: 7.5rem;
+  --radius-sm:   0.25rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   1rem;
+  --radius-full: 9999px;
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Base — same discipline as the venue sites: every element
+   selector lives inside @layer base, no exceptions. ─────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-brand-paper);
+    color: var(--color-brand-ink);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    color: var(--color-brand-ink);
+  }
+
+  img, video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-brass);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Components ─────────────────────────────────────────────
+   Italic accent phrase — the recurring portfolio device, rebuilt
+   here with the corporate serif rather than reusing Cococabana's
+   Cormorant Garamond treatment verbatim.
+   ────────────────────────────────────────────────────────── */
+@layer components {
+  .accent-text {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-weight: 500;
+  }
+}

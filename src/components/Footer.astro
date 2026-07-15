@@ -1,0 +1,155 @@
+---
+import { GPH_NETWORK, GRIND_AND_PROSPER_URL } from '../data/gphNetwork';
+
+const navItems = [
+  { label: 'About', href: '/about' },
+  { label: 'Concepts', href: '/concepts' },
+  { label: 'Team', href: '/team' },
+  { label: 'Careers', href: '/careers' },
+  { label: 'Press', href: '/press' },
+  { label: 'Contact', href: '/contact' },
+];
+---
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <p class="wordmark">Grind &amp; Prosper Hospitality</p>
+      <p class="descriptor">A San Diego hospitality group behind six distinct concepts.</p>
+    </div>
+
+    <div class="footer-columns">
+      <nav aria-label="Footer site navigation">
+        <h2 class="col-heading">Site</h2>
+        <ul>
+          {navItems.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <nav aria-label="GPH venues">
+        <h2 class="col-heading">Our concepts</h2>
+        <ul>
+          {GPH_NETWORK.map((venue) => (
+            <li><a href={venue.url}>{venue.name}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; {new Date().getFullYear()} Grind &amp; Prosper Hospitality</p>
+      <a href={GRIND_AND_PROSPER_URL}>{GRIND_AND_PROSPER_URL.replace('https://', '')}</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: var(--color-brand-ink);
+    color: var(--color-brand-paper);
+    padding-block: var(--spacing-section);
+  }
+
+  .footer-inner {
+    max-width: 88rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .footer-top {
+    margin-bottom: 4rem;
+  }
+
+  .footer-top p {
+    margin: 0;
+  }
+
+  .wordmark {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 500;
+    color: var(--color-brand-white);
+    margin-bottom: 0.5rem !important;
+  }
+
+  .descriptor {
+    font-size: var(--text-sm);
+    color: rgba(247, 243, 234, 0.6);
+    max-width: 32ch;
+  }
+
+  .footer-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(247, 243, 234, 0.14);
+  }
+
+  .col-heading {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-brand-brass-light);
+    margin-bottom: 1.25rem;
+  }
+
+  .footer-columns ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .footer-columns a {
+    font-size: var(--text-sm);
+    color: rgba(247, 243, 234, 0.72);
+    transition: color 0.2s var(--ease-smooth);
+  }
+
+  .footer-columns a:hover,
+  .footer-columns a:focus-visible {
+    color: var(--color-brand-white);
+  }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1.5rem;
+    font-size: var(--text-xs);
+    color: rgba(247, 243, 234, 0.55);
+  }
+
+  .footer-bottom p {
+    margin: 0;
+  }
+
+  .footer-bottom a {
+    color: rgba(247, 243, 234, 0.55);
+    transition: color 0.2s var(--ease-smooth);
+  }
+
+  .footer-bottom a:hover,
+  .footer-bottom a:focus-visible {
+    color: var(--color-brand-white);
+  }
+
+  @media (max-width: 40rem) {
+    .footer-columns {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+</style>

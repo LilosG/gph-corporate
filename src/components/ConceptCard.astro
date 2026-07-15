@@ -1,0 +1,66 @@
+---
+interface Props {
+  name: string;
+  url: string;
+  index: number;
+}
+const { name, url, index } = Astro.props;
+---
+<a href={url} class="concept-card">
+  <div class="image-slot" aria-hidden="true">
+    <span class="index">{String(index).padStart(2, '0')}</span>
+  </div>
+  <div class="card-footer">
+    <h3>{name}</h3>
+    <span class="visit">Visit site &rarr;</span>
+  </div>
+</a>
+
+<style>
+  .concept-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(26, 26, 23, 0.12);
+    transition: border-color 0.2s var(--ease-smooth);
+  }
+
+  .concept-card:hover,
+  .concept-card:focus-visible {
+    border-color: var(--color-brand-brass);
+  }
+
+  .image-slot {
+    aspect-ratio: var(--aspect-venue);
+    background: linear-gradient(135deg, var(--color-brand-paper-dark), var(--color-brand-paper));
+    display: flex;
+    align-items: flex-end;
+    padding: 1rem;
+  }
+
+  .index {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-brand-ink-light);
+  }
+
+  .card-footer {
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .card-footer h3 {
+    font-size: var(--text-lg);
+    font-weight: 500;
+  }
+
+  .visit {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-brand-brass);
+    white-space: nowrap;
+  }
+</style>
