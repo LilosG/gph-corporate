@@ -9,80 +9,92 @@ const { name, url, index, imageSlug } = Astro.props;
 const hasImage = Boolean(imageSlug);
 ---
 <a href={url} class="concept-card">
-  <div class="image-slot" class:list={[{ 'has-image': hasImage }]}>
-    {hasImage ? (
-      <img src={`/images/concept-${imageSlug}.webp`} alt={name} loading="lazy" />
-    ) : (
-      <span class="index">{String(index).padStart(2, '0')}</span>
-    )}
-  </div>
-  <div class="card-footer">
+  {hasImage ? (
+    <img src={`/images/concept-${imageSlug}.webp`} alt={name} loading="lazy" class="card-image" />
+  ) : (
+    <div class="pending-bg" aria-hidden="true"></div>
+  )}
+  <div class="card-scrim"></div>
+  <span class="index">{String(index).padStart(2, '0')}</span>
+  <div class="card-content">
     <h3>{name}</h3>
-    <span class="visit">Visit site &rarr;</span>
+    {hasImage ? (
+      <span class="visit">Visit site &rarr;</span>
+    ) : (
+      <span class="visit pending-label">Photography pending</span>
+    )}
   </div>
 </a>
 
 <style>
   .concept-card {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid rgba(26, 26, 23, 0.12);
-    transition: border-color 0.2s var(--ease-smooth);
-  }
-
-  .concept-card:hover,
-  .concept-card:focus-visible {
-    border-color: var(--color-brand-brass);
-  }
-
-  .image-slot {
+    position: relative;
+    display: block;
     aspect-ratio: var(--aspect-venue);
-    background: linear-gradient(135deg, var(--color-brand-paper-dark), var(--color-brand-paper));
-    display: flex;
-    align-items: flex-end;
-    padding: 1rem;
     overflow: hidden;
   }
 
-  .image-slot.has-image {
-    padding: 0;
-  }
-
-  .image-slot img {
+  .card-image,
+  .pending-bg {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.4s var(--ease-smooth);
   }
 
-  .concept-card:hover .image-slot img {
-    transform: scale(1.04);
+  .pending-bg {
+    background: linear-gradient(135deg, var(--color-brand-paper-dark), var(--color-brand-paper));
+  }
+
+  .concept-card:hover .card-image {
+    transform: scale(1.05);
+  }
+
+  .card-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15, 15, 13, 0) 45%, rgba(15, 15, 13, 0.85) 100%);
   }
 
   .index {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
     font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    color: var(--color-brand-ink-light);
+    font-size: var(--text-xs);
+    color: rgba(247, 243, 234, 0.75);
+    z-index: 1;
   }
 
-  .card-footer {
+  .card-content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
     padding: 1.25rem;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     gap: 1rem;
   }
 
-  .card-footer h3 {
-    font-size: var(--text-lg);
+  .card-content h3 {
+    font-size: var(--text-xl);
     font-weight: 500;
+    color: var(--color-brand-white);
   }
 
   .visit {
     font-size: var(--text-xs);
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--color-brand-brass);
+    color: var(--color-brand-brass-light);
     white-space: nowrap;
+  }
+
+  .pending-label {
+    color: var(--color-brand-ink-light);
   }
 </style>

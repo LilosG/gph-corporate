@@ -1,0 +1,46 @@
+---
+import type { Milestone } from '../data/company';
+interface Props {
+  milestones: Milestone[];
+}
+const { milestones } = Astro.props;
+---
+<div class="timeline">
+  {milestones.map((m) => (
+    <div class="milestone" class:list={[{ placeholder: m.placeholder }]}>
+      <span class="year">{m.year}</span>
+      <span class="label">{m.label}</span>
+    </div>
+  ))}
+</div>
+
+<style>
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(26, 26, 23, 0.12);
+  }
+
+  .milestone {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(26, 26, 23, 0.12);
+  }
+
+  .milestone.placeholder .label {
+    color: var(--color-brand-ink-light);
+    font-style: italic;
+  }
+
+  .year {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    color: var(--color-brand-brass);
+  }
+
+  .label {
+    font-size: var(--text-lg);
+  }
+</style>

@@ -1,29 +1,29 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import StatBand from '../components/StatBand.astro';
 import ConceptCard from '../components/ConceptCard.astro';
 import { GPH_NETWORK } from '../data/gphNetwork';
 import { company } from '../data/company';
 
-// Maps venue name to an image slug where real photography has been
-// provided. Venues without an entry here fall back to the placeholder
-// gradient card until photography is sent.
 const imageSlugs: Record<string, string> = {
   'Coco Maya': 'coco-maya',
   'Louisiana Purchase': 'louisiana-purchase',
   'Coco Cabana': 'cococabana',
+  "Miss B's Coconut Club": 'miss-bs-coconut-club',
+  'Park 101': 'park-101',
+  'The Lobby Tiki Bar': 'lobby-tiki-bar',
 };
 ---
 <BaseLayout
   title="Grind & Prosper Hospitality"
   description="A San Diego based restaurant group of six distinct concepts, grinding now to prosper later."
+  transparentNav={true}
 >
   <section class="hero">
-    <img src="/images/hero-coco-maya.webp" alt="" class="hero-image" />
+    <img src="/images/hero-lp.webp" alt="" class="hero-image" />
     <div class="hero-scrim"></div>
     <div class="hero-inner">
       <p class="eyebrow">San Diego, established {company.founded}</p>
-      <h1>Six concepts. <span class="accent-text">One family.</span></h1>
+      <h1>Six concepts.<br /><span class="accent-text">One family.</span></h1>
       <p class="hero-copy">{company.whatSection.split('. ').slice(0, 2).join('. ')}.</p>
       <div class="hero-actions">
         <a href="/concepts" class="btn btn-primary">Explore our concepts</a>
@@ -32,7 +32,16 @@ const imageSlugs: Record<string, string> = {
     </div>
   </section>
 
-  <StatBand />
+  <section class="editorial">
+    <img src="/images/concept-lobby-tiki-bar.webp" alt="" class="editorial-image" />
+    <div class="editorial-scrim"></div>
+    <div class="editorial-inner">
+      <p class="eyebrow">Our philosophy</p>
+      <h2>Built on <span class="accent-text">vibes.</span></h2>
+      <p class="editorial-copy">{company.philosophySection.split('. ').slice(0, 2).join('. ')}.</p>
+      <a href="/about" class="btn btn-secondary">Read our story</a>
+    </div>
+  </section>
 
   <section class="concepts-preview">
     <div class="section-inner">
@@ -49,7 +58,10 @@ const imageSlugs: Record<string, string> = {
   </section>
 
   <section class="careers-band">
-    <div class="section-inner careers-inner">
+    <img src="/images/concept-cococabana.webp" alt="" class="careers-image" />
+    <div class="careers-scrim"></div>
+    <div class="careers-inner">
+      <p class="eyebrow">Join the team</p>
       <h2>We're always growing.</h2>
       <p>Join a team that works hard and plays harder across six San Diego venues.</p>
       <a href="/careers" class="btn btn-primary">See careers</a>
@@ -60,13 +72,15 @@ const imageSlugs: Record<string, string> = {
 <style>
   .hero {
     position: relative;
-    min-height: 34rem;
+    min-height: 40rem;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     overflow: hidden;
   }
 
-  .hero-image {
+  .hero-image,
+  .editorial-image,
+  .careers-image {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -77,15 +91,29 @@ const imageSlugs: Record<string, string> = {
   .hero-scrim {
     position: absolute;
     inset: 0;
-    background: linear-gradient(0deg, rgba(26, 26, 23, 0.88) 5%, rgba(26, 26, 23, 0.35) 55%, rgba(26, 26, 23, 0.1) 100%);
+    background: linear-gradient(180deg, rgba(15, 15, 13, 0.55) 0%, rgba(15, 15, 13, 0.25) 40%, rgba(15, 15, 13, 0.7) 100%);
   }
 
   .hero-inner {
     position: relative;
-    max-width: 88rem;
-    margin-inline: auto;
-    padding: 4rem 1.5rem;
     max-width: 42rem;
+    margin-inline: auto;
+    padding: 6rem 1.5rem;
+  }
+
+  .editorial-inner {
+    position: relative;
+    max-width: 32rem;
+    margin-inline: auto;
+    padding: 6rem 1.5rem;
+  }
+
+  .careers-inner {
+    position: relative;
+    max-width: 34rem;
+    margin-inline: auto;
+    padding: 6rem 1.5rem;
+    text-align: center;
   }
 
   .eyebrow {
@@ -94,25 +122,23 @@ const imageSlugs: Record<string, string> = {
     letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
     color: var(--color-brand-brass-light);
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
   }
 
   .hero h1 {
     font-size: var(--text-hero);
     line-height: var(--leading-display);
     color: var(--color-brand-white);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
+    max-width: 20ch;
   }
 
-  .hero h1 .accent-text {
-    display: block;
-  }
-
-  .hero-copy {
+  .hero-copy,
+  .editorial-copy {
     font-size: var(--text-lg);
-    color: rgba(247, 243, 234, 0.85);
+    color: rgba(247, 243, 234, 0.9);
     margin-bottom: 2rem;
-    max-width: 38ch;
+    max-width: 40ch;
   }
 
   .hero-actions {
@@ -123,7 +149,7 @@ const imageSlugs: Record<string, string> = {
 
   .btn {
     display: inline-block;
-    padding: 0.85rem 1.75rem;
+    padding: 0.9rem 1.85rem;
     font-size: var(--text-sm);
     font-weight: 500;
     letter-spacing: var(--tracking-cta);
@@ -132,13 +158,13 @@ const imageSlugs: Record<string, string> = {
   }
 
   .btn-primary {
-    background-color: var(--color-brand-white);
-    color: var(--color-brand-ink);
+    background-color: var(--color-brand-brass);
+    color: var(--color-brand-white);
   }
 
   .btn-primary:hover,
   .btn-primary:focus-visible {
-    background-color: var(--color-brand-brass-light);
+    background-color: var(--color-brand-brass-dark);
   }
 
   .btn-secondary {
@@ -150,6 +176,30 @@ const imageSlugs: Record<string, string> = {
   .btn-secondary:focus-visible {
     background-color: var(--color-brand-white);
     color: var(--color-brand-ink);
+  }
+
+  .editorial {
+    position: relative;
+    min-height: 34rem;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .editorial-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(15, 15, 13, 0.85) 0%, rgba(15, 15, 13, 0.55) 45%, rgba(15, 15, 13, 0.2) 100%);
+  }
+
+  .editorial-inner {
+    max-width: 32rem;
+  }
+
+  .editorial h2 {
+    font-size: var(--text-section-xl);
+    color: var(--color-brand-white);
+    margin-bottom: 1.25rem;
   }
 
   .section-inner {
@@ -164,6 +214,10 @@ const imageSlugs: Record<string, string> = {
     max-width: 36rem;
   }
 
+  .section-header .eyebrow {
+    color: var(--color-brand-brass);
+  }
+
   .section-header h2 {
     font-size: var(--text-section);
   }
@@ -175,21 +229,33 @@ const imageSlugs: Record<string, string> = {
   }
 
   .careers-band {
-    background-color: var(--color-brand-paper-dark);
+    position: relative;
+    min-height: 26rem;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .careers-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 15, 13, 0.72);
   }
 
   .careers-inner {
     text-align: center;
     max-width: 34rem;
+    margin-inline: auto;
   }
 
   .careers-inner h2 {
     font-size: var(--text-section);
+    color: var(--color-brand-white);
     margin-bottom: 1rem;
   }
 
-  .careers-inner p {
-    color: var(--color-brand-ink-light);
+  .careers-inner p:not(.eyebrow) {
+    color: rgba(247, 243, 234, 0.85);
     margin-bottom: 2rem;
   }
 
@@ -202,6 +268,10 @@ const imageSlugs: Record<string, string> = {
   @media (max-width: 40rem) {
     .concepts-grid {
       grid-template-columns: 1fr;
+    }
+
+    .editorial-inner {
+      max-width: 100%;
     }
   }
 </style>

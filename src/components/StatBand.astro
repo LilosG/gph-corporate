@@ -4,7 +4,7 @@ import { company } from '../data/company';
 const stats = [
   { value: String(company.stats.yearsOperating), label: 'Years operating' },
   { value: String(company.stats.venuesCount), label: 'Concepts' },
-  { value: '1', label: 'San Diego roots' },
+  { value: String(company.founded), label: 'Founded' },
 ];
 ---
 <section class="stat-band" aria-label="Company statistics">
@@ -21,8 +21,7 @@ const stats = [
 <style>
   .stat-band {
     background-color: var(--color-brand-paper-dark);
-    border-block: 1px solid var(--color-brand-ink);
-    border-color: rgba(26, 26, 23, 0.1);
+    border-block: 1px solid rgba(26, 26, 23, 0.1);
   }
 
   .stat-inner {

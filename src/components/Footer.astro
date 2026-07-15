@@ -13,7 +13,7 @@ const navItems = [
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-top">
-      <p class="wordmark">Grind &amp; Prosper Hospitality</p>
+      <img src="/images/gph-logo-white.png" alt="Grind & Prosper Hospitality" class="footer-logo" />
       <p class="descriptor">A San Diego hospitality group behind six distinct concepts.</p>
     </div>
 
@@ -61,22 +61,17 @@ const navItems = [
     margin-bottom: 4rem;
   }
 
-  .footer-top p {
-    margin: 0;
-  }
-
-  .wordmark {
-    font-family: var(--font-display);
-    font-size: var(--text-xl);
-    font-weight: 500;
-    color: var(--color-brand-white);
-    margin-bottom: 0.5rem !important;
+  .footer-logo {
+    height: 56px;
+    width: auto;
+    margin-bottom: 1.25rem;
   }
 
   .descriptor {
     font-size: var(--text-sm);
     color: rgba(247, 243, 234, 0.6);
     max-width: 32ch;
+    margin: 0;
   }
 
   .footer-columns {
