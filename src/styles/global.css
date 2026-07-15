@@ -132,4 +132,51 @@
     font-style: italic;
     font-weight: 500;
   }
+
+  /* --- Buttons -- single source of truth. Every CTA across every
+     page/component uses .btn plus exactly one variant class below.
+     Never redeclare button padding/type styles locally. -------- */
+  .btn {
+    display: inline-block;
+    padding: 0.9rem 1.85rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: var(--tracking-cta);
+    text-transform: uppercase;
+    transition: all 0.2s var(--ease-smooth);
+  }
+
+  .btn-primary {
+    background-color: var(--color-brand-brass);
+    color: var(--color-brand-white);
+  }
+
+  .btn-primary:hover,
+  .btn-primary:focus-visible {
+    background-color: var(--color-brand-brass-dark);
+  }
+
+  /* For CTAs sitting on a dark/photo background. */
+  .btn-secondary {
+    border: 1px solid var(--color-brand-white);
+    color: var(--color-brand-white);
+  }
+
+  .btn-secondary:hover,
+  .btn-secondary:focus-visible {
+    background-color: var(--color-brand-white);
+    color: var(--color-brand-ink);
+  }
+
+  /* For CTAs sitting on a light/paper background. */
+  .btn-outline-ink {
+    border: 1px solid var(--color-brand-ink);
+    color: var(--color-brand-ink);
+  }
+
+  .btn-outline-ink:hover,
+  .btn-outline-ink:focus-visible {
+    background-color: var(--color-brand-ink);
+    color: var(--color-brand-white);
+  }
 }

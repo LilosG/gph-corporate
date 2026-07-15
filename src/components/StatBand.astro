@@ -1,16 +1,23 @@
 ---
 import { company } from '../data/company';
 
+interface Props {
+  bgImage?: string;
+}
+const { bgImage } = Astro.props;
+
 const stats = [
   { value: String(company.stats.yearsOperating), label: 'Years operating' },
   { value: String(company.stats.venuesCount), label: 'Concepts' },
   { value: String(company.founded), label: 'Founded' },
 ];
 ---
-<section class="stat-band" aria-label="Company statistics">
+<section class="stat-band" data-photo={Boolean(bgImage)} aria-label="Company statistics">
+  {bgImage && <img src={bgImage} alt="" class="stat-image" loading="lazy" />}
+  {bgImage && <div class="stat-scrim"></div>}
   <div class="stat-inner">
-    {stats.map((stat) => (
-      <div class="stat">
+    {stats.map((stat, i) => (
+      <div class="stat" data-divider={i > 0}>
         <p class="value">{stat.value}</p>
         <p class="label">{stat.label}</p>
       </div>
@@ -20,26 +27,59 @@ const stats = [
 
 <style>
   .stat-band {
+    position: relative;
     background-color: var(--color-brand-paper-dark);
     border-block: 1px solid rgba(26, 26, 23, 0.1);
+    overflow: hidden;
+  }
+
+  .stat-band[data-photo='true'] {
+    border-block: none;
+  }
+
+  .stat-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .stat-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 15, 13, 0.74);
   }
 
   .stat-inner {
+    position: relative;
     max-width: 88rem;
     margin-inline: auto;
-    padding: 3rem 1.5rem;
+    padding: 3.5rem 1.5rem;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2rem;
     text-align: center;
   }
 
+  .stat[data-divider='true'] {
+    border-left: 1px solid rgba(26, 26, 23, 0.15);
+  }
+
+  .stat-band[data-photo='true'] .stat[data-divider='true'] {
+    border-left-color: rgba(247, 243, 234, 0.25);
+  }
+
   .value {
-    font-family: var(--font-mono);
-    font-size: var(--text-4xl);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: var(--text-5xl);
     font-weight: 500;
     color: var(--color-brand-ink);
     margin: 0 0 0.35rem;
+  }
+
+  .stat-band[data-photo='true'] .value {
+    color: var(--color-brand-white);
   }
 
   .label {
@@ -50,10 +90,25 @@ const stats = [
     margin: 0;
   }
 
+  .stat-band[data-photo='true'] .label {
+    color: rgba(247, 243, 234, 0.75);
+  }
+
   @media (max-width: 40rem) {
     .stat-inner {
       grid-template-columns: 1fr;
-      gap: 2.5rem;
+      gap: 2rem;
+    }
+
+    .stat[data-divider='true'] {
+      border-left: none;
+      border-top: 1px solid rgba(26, 26, 23, 0.15);
+      padding-top: 1.5rem;
+    }
+
+    .stat-band[data-photo='true'] .stat[data-divider='true'] {
+      border-top-color: rgba(247, 243, 234, 0.25);
     }
   }
 </style>
+

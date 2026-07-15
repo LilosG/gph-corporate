@@ -1,8 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import FullBleedBand from '../components/FullBleedBand.astro';
+import EditorialSplit from '../components/EditorialSplit.astro';
+import StatBand from '../components/StatBand.astro';
 import ConceptCard from '../components/ConceptCard.astro';
+import PhotoMosaic from '../components/PhotoMosaic.astro';
 import { GPH_NETWORK } from '../data/gphNetwork';
 import { company } from '../data/company';
+import { team } from '../data/team';
 
 const imageSlugs: Record<string, string> = {
   'Coco Maya': 'coco-maya',
@@ -12,36 +17,71 @@ const imageSlugs: Record<string, string> = {
   'Park 101': 'park-101',
   'The Lobby Tiki Bar': 'lobby-tiki-bar',
 };
+
+const mosaicImages = GPH_NETWORK.map((venue) => ({
+  src: `/images/concept-${imageSlugs[venue.name]}.webp`,
+  alt: venue.name,
+}));
 ---
 <BaseLayout
   title="Grind & Prosper Hospitality"
   description="A San Diego based restaurant group of six distinct concepts, grinding now to prosper later."
   transparentNav={true}
 >
-  <section class="hero">
-    <img src="/images/hero-lp.webp" alt="" class="hero-image" />
-    <div class="hero-scrim"></div>
-    <div class="hero-inner">
-      <p class="eyebrow">San Diego, established {company.founded}</p>
-      <h1>Six concepts.<br /><span class="accent-text">One family.</span></h1>
-      <p class="hero-copy">{company.whatSection.split('. ').slice(0, 2).join('. ')}.</p>
-      <div class="hero-actions">
-        <a href="/concepts" class="btn btn-primary">Explore our concepts</a>
-        <a href="/about" class="btn btn-secondary">Our story</a>
-      </div>
+  <FullBleedBand
+    src="/images/hero-lp.webp"
+    minHeight="var(--min-h-hero)"
+    maxWidth="42rem"
+    scrim="bottom"
+  >
+    <p class="eyebrow">San Diego, established {company.founded}</p>
+    <h1 class="hero-heading">Six concepts.<br /><span class="accent-text">One family.</span></h1>
+    <p class="hero-subhead">{company.thesis}</p>
+    <div class="hero-actions">
+      <a href="/concepts" class="btn btn-primary">Explore our concepts</a>
+      <a href="/about" class="btn btn-secondary">Our story</a>
     </div>
-  </section>
+  </FullBleedBand>
 
-  <section class="editorial">
-    <img src="/images/concept-lobby-tiki-bar.webp" alt="" class="editorial-image" />
-    <div class="editorial-scrim"></div>
-    <div class="editorial-inner">
-      <p class="eyebrow">Our philosophy</p>
-      <h2>Built on <span class="accent-text">vibes.</span></h2>
-      <p class="editorial-copy">{company.philosophySection.split('. ').slice(0, 2).join('. ')}.</p>
-      <a href="/about" class="btn btn-secondary">Read our story</a>
-    </div>
-  </section>
+  <StatBand bgImage="/images/cococabana-rooftop-aerial.webp" />
+
+  <EditorialSplit
+    eyebrow="How it started"
+    body={company.whatSection}
+    imageSrc="/images/cococabana-neon-swing.webp"
+    imageAlt="Neon sign and hanging greenery at a Grind & Prosper Hospitality venue"
+    imageZoom={1.12}
+    ctaLabel="Read our story"
+    ctaHref="/about"
+  >
+    <Fragment slot="heading">Built from one <span class="accent-text">vision</span>.</Fragment>
+  </EditorialSplit>
+
+  <FullBleedBand
+    src="/images/concept-miss-bs-coconut-club.webp"
+    minHeight="var(--min-h-panel)"
+    maxWidth="32rem"
+    scrim="diagonal"
+  >
+    <p class="eyebrow">Our philosophy</p>
+    <h2 class="band-heading">Built on <span class="accent-text">vibes.</span></h2>
+    <p class="band-body">{company.philosophySection}</p>
+    <a href="/about" class="btn btn-secondary">Read our story</a>
+  </FullBleedBand>
+
+  <PhotoMosaic images={mosaicImages} eyebrow="Six kitchens, six bars, one team" />
+
+  <EditorialSplit
+    eyebrow="Who we are"
+    body={company.whoAndWhySection}
+    imageSrc="/images/concept-park-101.webp"
+    imageAlt="Grind & Prosper Hospitality team at one of the six venues"
+    ctaLabel="Meet the team"
+    ctaHref="/team"
+    reverse={true}
+  >
+    <Fragment slot="heading">Friends who became <span class="accent-text">family</span>.</Fragment>
+  </EditorialSplit>
 
   <section class="concepts-preview">
     <div class="section-inner">
@@ -57,65 +97,39 @@ const imageSlugs: Record<string, string> = {
     </div>
   </section>
 
-  <section class="careers-band">
-    <img src="/images/concept-cococabana.webp" alt="" class="careers-image" />
-    <div class="careers-scrim"></div>
-    <div class="careers-inner">
-      <p class="eyebrow">Join the team</p>
-      <h2>We're always growing.</h2>
-      <p>Join a team that works hard and plays harder across six San Diego venues.</p>
-      <a href="/careers" class="btn btn-primary">See careers</a>
+  <section class="leadership-teaser">
+    <div class="section-inner">
+      <div class="leadership-header">
+        <p class="eyebrow">The people behind it</p>
+        <h2>Six concepts, one leadership team</h2>
+      </div>
+      <ul class="leadership-list">
+        {team.map((member) => (
+          <li class="leadership-chip">
+            <span class="member-name">{member.name}</span>
+            <span class="member-role">{member.role}</span>
+          </li>
+        ))}
+      </ul>
+      <a href="/team" class="btn btn-outline-ink">Meet the full team</a>
     </div>
   </section>
+
+  <FullBleedBand
+    src="/images/concept-cococabana.webp"
+    minHeight="var(--min-h-panel)"
+    maxWidth="34rem"
+    align="center"
+    scrim="solid"
+  >
+    <p class="eyebrow">Join the team</p>
+    <h2 class="band-heading">We're always growing.</h2>
+    <p class="band-body">Join a team that works hard and plays harder across six San Diego venues.</p>
+    <a href="/careers" class="btn btn-primary">See careers</a>
+  </FullBleedBand>
 </BaseLayout>
 
 <style>
-  .hero {
-    position: relative;
-    min-height: 40rem;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  .hero-image,
-  .editorial-image,
-  .careers-image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .hero-scrim {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(15, 15, 13, 0.55) 0%, rgba(15, 15, 13, 0.25) 40%, rgba(15, 15, 13, 0.7) 100%);
-  }
-
-  .hero-inner {
-    position: relative;
-    max-width: 42rem;
-    margin-inline: auto;
-    padding: 6rem 1.5rem;
-  }
-
-  .editorial-inner {
-    position: relative;
-    max-width: 32rem;
-    margin-inline: auto;
-    padding: 6rem 1.5rem;
-  }
-
-  .careers-inner {
-    position: relative;
-    max-width: 34rem;
-    margin-inline: auto;
-    padding: 6rem 1.5rem;
-    text-align: center;
-  }
-
   .eyebrow {
     font-size: var(--text-xs);
     font-weight: 500;
@@ -125,7 +139,7 @@ const imageSlugs: Record<string, string> = {
     margin-bottom: 1.25rem;
   }
 
-  .hero h1 {
+  .hero-heading {
     font-size: var(--text-hero);
     line-height: var(--leading-display);
     color: var(--color-brand-white);
@@ -133,12 +147,12 @@ const imageSlugs: Record<string, string> = {
     max-width: 20ch;
   }
 
-  .hero-copy,
-  .editorial-copy {
-    font-size: var(--text-lg);
+  .hero-subhead {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: var(--text-2xl);
     color: rgba(247, 243, 234, 0.9);
     margin-bottom: 2rem;
-    max-width: 40ch;
   }
 
   .hero-actions {
@@ -147,59 +161,21 @@ const imageSlugs: Record<string, string> = {
     flex-wrap: wrap;
   }
 
-  .btn {
-    display: inline-block;
-    padding: 0.9rem 1.85rem;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    letter-spacing: var(--tracking-cta);
-    text-transform: uppercase;
-    transition: all 0.2s var(--ease-smooth);
-  }
-
-  .btn-primary {
-    background-color: var(--color-brand-brass);
-    color: var(--color-brand-white);
-  }
-
-  .btn-primary:hover,
-  .btn-primary:focus-visible {
-    background-color: var(--color-brand-brass-dark);
-  }
-
-  .btn-secondary {
-    border: 1px solid var(--color-brand-white);
-    color: var(--color-brand-white);
-  }
-
-  .btn-secondary:hover,
-  .btn-secondary:focus-visible {
-    background-color: var(--color-brand-white);
-    color: var(--color-brand-ink);
-  }
-
-  .editorial {
-    position: relative;
-    min-height: 34rem;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  .editorial-scrim {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, rgba(15, 15, 13, 0.85) 0%, rgba(15, 15, 13, 0.55) 45%, rgba(15, 15, 13, 0.2) 100%);
-  }
-
-  .editorial-inner {
-    max-width: 32rem;
-  }
-
-  .editorial h2 {
+  .band-heading {
     font-size: var(--text-section-xl);
     color: var(--color-brand-white);
     margin-bottom: 1.25rem;
+  }
+
+  .band-body {
+    font-size: var(--text-lg);
+    color: rgba(247, 243, 234, 0.9);
+    margin-bottom: 2rem;
+    max-width: 46ch;
+  }
+
+  .full-bleed[data-align='center'] .band-body {
+    margin-inline: auto;
   }
 
   .section-inner {
@@ -209,16 +185,19 @@ const imageSlugs: Record<string, string> = {
     padding-block: var(--spacing-section);
   }
 
-  .section-header {
+  .section-header,
+  .leadership-header {
     margin-bottom: 3rem;
     max-width: 36rem;
   }
 
-  .section-header .eyebrow {
+  .section-header .eyebrow,
+  .leadership-header .eyebrow {
     color: var(--color-brand-brass);
   }
 
-  .section-header h2 {
+  .section-header h2,
+  .leadership-header h2 {
     font-size: var(--text-section);
   }
 
@@ -228,49 +207,55 @@ const imageSlugs: Record<string, string> = {
     gap: 1.5rem;
   }
 
-  .careers-band {
-    position: relative;
-    min-height: 26rem;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
+  .leadership-teaser {
+    background-color: var(--color-brand-paper-dark);
   }
 
-  .careers-scrim {
-    position: absolute;
-    inset: 0;
-    background: rgba(15, 15, 13, 0.72);
+  .leadership-list {
+    list-style: none;
+    margin: 0 0 2.5rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem 2rem;
   }
 
-  .careers-inner {
-    text-align: center;
-    max-width: 34rem;
-    margin-inline: auto;
+  .leadership-chip {
+    padding-block: 1.25rem;
+    border-top: 1px solid rgba(26, 26, 23, 0.12);
   }
 
-  .careers-inner h2 {
-    font-size: var(--text-section);
-    color: var(--color-brand-white);
-    margin-bottom: 1rem;
+  .member-name {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--color-brand-ink);
   }
 
-  .careers-inner p:not(.eyebrow) {
-    color: rgba(247, 243, 234, 0.85);
-    margin-bottom: 2rem;
+  .member-role {
+    display: block;
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-brand-ink-light);
+    margin-top: 0.35rem;
   }
 
   @media (max-width: 60rem) {
-    .concepts-grid {
+    .concepts-grid,
+    .leadership-list {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 40rem) {
-    .concepts-grid {
+    .concepts-grid,
+    .leadership-list {
       grid-template-columns: 1fr;
     }
 
-    .editorial-inner {
+    .hero-heading {
       max-width: 100%;
     }
   }

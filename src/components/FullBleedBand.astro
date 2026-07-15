@@ -1,0 +1,94 @@
+---
+interface Props {
+  src: string;
+  alt?: string;
+  minHeight?: string;
+  align?: 'left' | 'center';
+  maxWidth?: string;
+  scrim?: 'bottom' | 'diagonal' | 'solid';
+}
+const {
+  src,
+  alt = '',
+  minHeight = 'var(--min-h-panel)',
+  align = 'left',
+  maxWidth = '32rem',
+  scrim = 'bottom',
+} = Astro.props;
+---
+<section
+  class="full-bleed"
+  data-align={align}
+  data-scrim={scrim}
+  style={`--band-min-h: ${minHeight}; --band-max-w: ${maxWidth};`}
+>
+  <img src={src} alt={alt} class="band-image" loading="lazy" />
+  <div class="band-scrim"></div>
+  <div class="band-outer">
+    <div class="band-content">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .full-bleed {
+    position: relative;
+    min-height: var(--band-min-h);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .band-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .band-scrim {
+    position: absolute;
+    inset: 0;
+  }
+
+  .full-bleed[data-scrim='bottom'] .band-scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(15, 15, 13, 0.55) 0%,
+      rgba(15, 15, 13, 0.25) 40%,
+      rgba(15, 15, 13, 0.72) 100%
+    );
+  }
+
+  .full-bleed[data-scrim='diagonal'] .band-scrim {
+    background: linear-gradient(
+      90deg,
+      rgba(15, 15, 13, 0.88) 0%,
+      rgba(15, 15, 13, 0.55) 45%,
+      rgba(15, 15, 13, 0.15) 100%
+    );
+  }
+
+  .full-bleed[data-scrim='solid'] .band-scrim {
+    background: rgba(15, 15, 13, 0.72);
+  }
+
+  .band-outer {
+    position: relative;
+    width: 100%;
+    max-width: 88rem;
+    margin-inline: auto;
+    padding: 6rem 1.5rem;
+  }
+
+  .band-content {
+    max-width: var(--band-max-w);
+  }
+
+  .full-bleed[data-align='center'] .band-content {
+    margin-inline: auto;
+    text-align: center;
+  }
+</style>
