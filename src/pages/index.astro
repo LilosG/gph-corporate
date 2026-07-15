@@ -4,12 +4,23 @@ import StatBand from '../components/StatBand.astro';
 import ConceptCard from '../components/ConceptCard.astro';
 import { GPH_NETWORK } from '../data/gphNetwork';
 import { company } from '../data/company';
+
+// Maps venue name to an image slug where real photography has been
+// provided. Venues without an entry here fall back to the placeholder
+// gradient card until photography is sent.
+const imageSlugs: Record<string, string> = {
+  'Coco Maya': 'coco-maya',
+  'Louisiana Purchase': 'louisiana-purchase',
+  'Coco Cabana': 'cococabana',
+};
 ---
 <BaseLayout
   title="Grind & Prosper Hospitality"
   description="A San Diego based restaurant group of six distinct concepts, grinding now to prosper later."
 >
   <section class="hero">
+    <img src="/images/hero-coco-maya.webp" alt="" class="hero-image" />
+    <div class="hero-scrim"></div>
     <div class="hero-inner">
       <p class="eyebrow">San Diego, established {company.founded}</p>
       <h1>Six concepts. <span class="accent-text">One family.</span></h1>
@@ -31,7 +42,7 @@ import { company } from '../data/company';
       </div>
       <div class="concepts-grid">
         {GPH_NETWORK.map((venue, i) => (
-          <ConceptCard name={venue.name} url={venue.url} index={i + 1} />
+          <ConceptCard name={venue.name} url={venue.url} index={i + 1} imageSlug={imageSlugs[venue.name]} />
         ))}
       </div>
     </div>
@@ -48,13 +59,32 @@ import { company } from '../data/company';
 
 <style>
   .hero {
-    padding-block: 6rem 5rem;
+    position: relative;
+    min-height: 34rem;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .hero-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(26, 26, 23, 0.88) 5%, rgba(26, 26, 23, 0.35) 55%, rgba(26, 26, 23, 0.1) 100%);
   }
 
   .hero-inner {
+    position: relative;
     max-width: 88rem;
     margin-inline: auto;
-    padding-inline: 1.5rem;
+    padding: 4rem 1.5rem;
     max-width: 42rem;
   }
 
@@ -63,13 +93,14 @@ import { company } from '../data/company';
     font-weight: 500;
     letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
-    color: var(--color-brand-brass);
+    color: var(--color-brand-brass-light);
     margin-bottom: 1rem;
   }
 
   .hero h1 {
     font-size: var(--text-hero);
     line-height: var(--leading-display);
+    color: var(--color-brand-white);
     margin-bottom: 1.5rem;
   }
 
@@ -79,7 +110,7 @@ import { company } from '../data/company';
 
   .hero-copy {
     font-size: var(--text-lg);
-    color: var(--color-brand-ink-light);
+    color: rgba(247, 243, 234, 0.85);
     margin-bottom: 2rem;
     max-width: 38ch;
   }
@@ -101,24 +132,24 @@ import { company } from '../data/company';
   }
 
   .btn-primary {
-    background-color: var(--color-brand-ink);
-    color: var(--color-brand-paper);
+    background-color: var(--color-brand-white);
+    color: var(--color-brand-ink);
   }
 
   .btn-primary:hover,
   .btn-primary:focus-visible {
-    background-color: var(--color-brand-brass-dark);
+    background-color: var(--color-brand-brass-light);
   }
 
   .btn-secondary {
-    border: 1px solid var(--color-brand-ink);
-    color: var(--color-brand-ink);
+    border: 1px solid var(--color-brand-white);
+    color: var(--color-brand-white);
   }
 
   .btn-secondary:hover,
   .btn-secondary:focus-visible {
-    background-color: var(--color-brand-ink);
-    color: var(--color-brand-paper);
+    background-color: var(--color-brand-white);
+    color: var(--color-brand-ink);
   }
 
   .section-inner {

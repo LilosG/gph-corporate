@@ -3,12 +3,18 @@ interface Props {
   name: string;
   url: string;
   index: number;
+  imageSlug?: string;
 }
-const { name, url, index } = Astro.props;
+const { name, url, index, imageSlug } = Astro.props;
+const hasImage = Boolean(imageSlug);
 ---
 <a href={url} class="concept-card">
-  <div class="image-slot" aria-hidden="true">
-    <span class="index">{String(index).padStart(2, '0')}</span>
+  <div class="image-slot" class:list={[{ 'has-image': hasImage }]}>
+    {hasImage ? (
+      <img src={`/images/concept-${imageSlug}.webp`} alt={name} loading="lazy" />
+    ) : (
+      <span class="index">{String(index).padStart(2, '0')}</span>
+    )}
   </div>
   <div class="card-footer">
     <h3>{name}</h3>
@@ -35,6 +41,22 @@ const { name, url, index } = Astro.props;
     display: flex;
     align-items: flex-end;
     padding: 1rem;
+    overflow: hidden;
+  }
+
+  .image-slot.has-image {
+    padding: 0;
+  }
+
+  .image-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s var(--ease-smooth);
+  }
+
+  .concept-card:hover .image-slot img {
+    transform: scale(1.04);
   }
 
   .index {
