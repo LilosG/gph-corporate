@@ -2,6 +2,7 @@
 interface MosaicImage {
   src: string;
   alt: string;
+  name?: string;
 }
 interface Props {
   images: MosaicImage[];
@@ -10,15 +11,20 @@ interface Props {
 const { images, eyebrow } = Astro.props;
 ---
 <section class="mosaic">
-  {eyebrow && (
-    <div class="mosaic-eyebrow-wrap">
-      <p class="eyebrow">{eyebrow}</p>
-    </div>
-  )}
-  <div class="mosaic-grid">
+  <div class="mosaic-header">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <p class="scroll-hint" aria-hidden="true">Scroll &rarr;</p>
+  </div>
+  <div class="mosaic-rail" role="region" aria-label="Venue photo gallery">
     {images.map((img) => (
-      <div class="mosaic-tile">
+      <div class="rail-tile">
         <img src={img.src} alt={img.alt} loading="lazy" />
+        {img.name && (
+          <>
+            <div class="tile-scrim"></div>
+            <span class="tile-name">{img.name}</span>
+          </>
+        )}
       </div>
     ))}
   </div>
@@ -28,13 +34,17 @@ const { images, eyebrow } = Astro.props;
   .mosaic {
     background-color: var(--color-brand-ink);
     padding-block: var(--spacing-section);
+    overflow: hidden;
   }
 
-  .mosaic-eyebrow-wrap {
+  .mosaic-header {
     max-width: 88rem;
     margin-inline: auto;
     padding-inline: 1.5rem;
     margin-bottom: 1.5rem;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
   }
 
   .eyebrow {
@@ -45,45 +55,78 @@ const { images, eyebrow } = Astro.props;
     color: var(--color-brand-brass-light);
   }
 
-  .mosaic-grid {
-    max-width: 88rem;
-    margin-inline: auto;
+  .scroll-hint {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: rgba(247, 243, 234, 0.45);
+  }
+
+  /* ─── Cinematic rail — wide landscape tiles, horizontal scroll,
+     snap-to-tile. Deliberately not a grid: this section's job is to
+     feel like a gallery walk-through, distinct from every stacked
+     card grid elsewhere on the site. ──────────────────────────── */
+  .mosaic-rail {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1.5rem;
     padding-inline: 1.5rem;
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
-  .mosaic-tile {
-    grid-column: span 2;
-    aspect-ratio: var(--aspect-portrait);
+  .mosaic-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rail-tile {
+    position: relative;
+    flex: 0 0 auto;
+    width: min(70vw, 34rem);
+    aspect-ratio: 4 / 3;
     overflow: hidden;
+    scroll-snap-align: start;
   }
 
-  .mosaic-tile img {
+  .rail-tile img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s var(--ease-smooth);
   }
 
-  .mosaic-tile:hover img {
+  .rail-tile:hover img {
     transform: scale(1.04);
   }
 
-  @media (max-width: 60rem) {
-    .mosaic-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+  .tile-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15, 15, 13, 0) 55%, rgba(15, 15, 13, 0.8) 100%);
+    pointer-events: none;
+  }
 
-    .mosaic-tile {
-      grid-column: span 2;
-    }
+  .tile-name {
+    position: absolute;
+    left: 1.1rem;
+    bottom: 1rem;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--color-brand-white);
   }
 
   @media (max-width: 40rem) {
-    .mosaic-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .rail-tile {
+      width: 82vw;
+      aspect-ratio: 4 / 3;
+    }
+
+    .scroll-hint {
+      display: none;
     }
   }
 </style>
