@@ -1,27 +1,28 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FullBleedBand from '../components/FullBleedBand.astro';
-import EditorialSplit from '../components/EditorialSplit.astro';
 import StatBand from '../components/StatBand.astro';
-import ConceptCard from '../components/ConceptCard.astro';
-import PhotoMosaic from '../components/PhotoMosaic.astro';
+import ConceptChapter from '../components/ConceptChapter.astro';
+import Interlude from '../components/Interlude.astro';
 import { GPH_NETWORK } from '../data/gphNetwork';
 import { company } from '../data/company';
-import { team } from '../data/team';
+import { CHAPTER_IMAGES, INTERLUDE_IMAGES } from '../data/conceptChapters';
 
-const imageSlugs: Record<string, string> = {
-  'Coco Maya': 'coco-maya',
-  'Louisiana Purchase': 'louisiana-purchase',
-  'Coco Cabana': 'cococabana',
-  "Miss B's Coconut Club": 'miss-bs-coconut-club',
-  'Park 101': 'park-101',
-  'The Lobby Tiki Bar': 'lobby-tiki-bar',
-};
+const byName = Object.fromEntries(GPH_NETWORK.map((v) => [v.name, v]));
 
-const mosaicImages = GPH_NETWORK.map((venue) => ({
-  src: `/images/concept-${imageSlugs[venue.name]}.webp`,
-  alt: venue.name,
-}));
+// Deliberate pacing order — not the raw GPH_NETWORK order. Opens and
+// closes on the two richest photo sets (Cococabana, Louisiana
+// Purchase); the thinnest chapter (Lobby, 2 source photos) sits late,
+// bracketed by interludes rather than opening the page on the weakest
+// material.
+const chapterOrder = [
+  'Coco Cabana',
+  "Miss B's Coconut Club",
+  'Louisiana Purchase',
+  'Park 101',
+  'Coco Maya',
+  'The Lobby Tiki Bar',
+];
 ---
 <BaseLayout
   title="Grind & Prosper Hospitality"
@@ -44,78 +45,89 @@ const mosaicImages = GPH_NETWORK.map((venue) => ({
 
   <StatBand bgImage="/images/cococabana-rooftop-aerial.webp" />
 
-  <EditorialSplit
-    eyebrow="How it started"
-    body={company.whatSection}
-    imageSrc="/images/cococabana-neon-swing.webp"
-    imageAlt="Neon sign and hanging greenery at a Grind & Prosper Hospitality venue"
-    imageZoom={1.12}
-    ctaLabel="Read our story"
-    ctaHref="/about"
-  >
-    <Fragment slot="heading">Built from one <span class="accent-text">vision</span>.</Fragment>
-  </EditorialSplit>
-
   <FullBleedBand
-    src="/images/concept-miss-bs-coconut-club.webp"
-    minHeight="var(--min-h-panel)"
-    maxWidth="32rem"
-    scrim="diagonal"
+    src={INTERLUDE_IMAGES[0]}
+    minHeight="56vh"
+    maxWidth="38rem"
+    align="center"
+    scrim="solid"
   >
-    <p class="eyebrow">Our philosophy</p>
-    <h2 class="band-heading">Built on <span class="accent-text">vibes.</span></h2>
-    <p class="band-body">{company.philosophySection}</p>
-    <a href="/about" class="btn btn-secondary">Read our story</a>
+    <h2 class="statement">Six kitchens. Six bars. <span class="accent-text">Zero corporate template.</span></h2>
   </FullBleedBand>
 
-  <PhotoMosaic images={mosaicImages} eyebrow="Six kitchens, six bars, one team" />
+  <ConceptChapter
+    name={chapterOrder[0]}
+    url={byName[chapterOrder[0]].url}
+    index={1}
+    hero={CHAPTER_IMAGES[chapterOrder[0]].hero}
+    supporting={CHAPTER_IMAGES[chapterOrder[0]].supporting}
+  />
 
-  <EditorialSplit
-    eyebrow="Who we are"
-    body={company.whoAndWhySection}
-    imageSrc="/images/concept-park-101.webp"
-    imageAlt="Grind & Prosper Hospitality team at one of the six venues"
-    ctaLabel="Meet the team"
-    ctaHref="/team"
+  <Interlude src={INTERLUDE_IMAGES[1]} />
+
+  <ConceptChapter
+    name={chapterOrder[1]}
+    url={byName[chapterOrder[1]].url}
+    index={2}
+    hero={CHAPTER_IMAGES[chapterOrder[1]].hero}
+    supporting={CHAPTER_IMAGES[chapterOrder[1]].supporting}
     reverse={true}
-  >
-    <Fragment slot="heading">Friends who became <span class="accent-text">family</span>.</Fragment>
-  </EditorialSplit>
+  />
 
-  <section class="concepts-preview">
-    <div class="section-inner">
-      <div class="section-header">
-        <p class="eyebrow">Original concepts</p>
-        <h2>Where San Diego comes to drink well</h2>
-      </div>
-      <div class="concepts-grid">
-        {GPH_NETWORK.map((venue, i) => (
-          <ConceptCard name={venue.name} url={venue.url} index={i + 1} imageSlug={imageSlugs[venue.name]} />
-        ))}
-      </div>
+  <ConceptChapter
+    name={chapterOrder[2]}
+    url={byName[chapterOrder[2]].url}
+    index={3}
+    hero={CHAPTER_IMAGES[chapterOrder[2]].hero}
+    supporting={CHAPTER_IMAGES[chapterOrder[2]].supporting}
+  />
+
+  <Interlude src={INTERLUDE_IMAGES[2]} />
+
+  <ConceptChapter
+    name={chapterOrder[3]}
+    url={byName[chapterOrder[3]].url}
+    index={4}
+    hero={CHAPTER_IMAGES[chapterOrder[3]].hero}
+    supporting={CHAPTER_IMAGES[chapterOrder[3]].supporting}
+    reverse={true}
+  />
+
+  <ConceptChapter
+    name={chapterOrder[4]}
+    url={byName[chapterOrder[4]].url}
+    index={5}
+    hero={CHAPTER_IMAGES[chapterOrder[4]].hero}
+    supporting={CHAPTER_IMAGES[chapterOrder[4]].supporting}
+  />
+
+  <Interlude src={INTERLUDE_IMAGES[3]} />
+
+  <ConceptChapter
+    name={chapterOrder[5]}
+    url={byName[chapterOrder[5]].url}
+    index={6}
+    hero={CHAPTER_IMAGES[chapterOrder[5]].hero}
+    supporting={CHAPTER_IMAGES[chapterOrder[5]].supporting}
+    reverse={true}
+  />
+
+  <section class="culture">
+    <div class="culture-inner">
+      <p class="eyebrow">Who we are</p>
+      <h2>Friends who became <span class="accent-text">family</span>.</h2>
+      <p class="culture-body">{company.whoAndWhySection}</p>
+      <a href="/team" class="btn btn-outline-ink">Meet the team</a>
     </div>
-  </section>
-
-  <section class="leadership-teaser">
-    <div class="section-inner">
-      <div class="leadership-header">
-        <p class="eyebrow">The people behind it</p>
-        <h2>Six concepts, one leadership team</h2>
-      </div>
-      <ul class="leadership-list">
-        {team.map((member) => (
-          <li class="leadership-chip">
-            <span class="member-name">{member.name}</span>
-            <span class="member-role">{member.role}</span>
-          </li>
-        ))}
-      </ul>
-      <a href="/team" class="btn btn-outline-ink">Meet the full team</a>
+    <div class="culture-strip">
+      {[INTERLUDE_IMAGES[4], INTERLUDE_IMAGES[5], INTERLUDE_IMAGES[6]].map((src) => (
+        <div class="culture-tile"><img src={src} alt="" loading="lazy" /></div>
+      ))}
     </div>
   </section>
 
   <FullBleedBand
-    src="/images/concept-cococabana.webp"
+    src={INTERLUDE_IMAGES[7]}
     minHeight="var(--min-h-panel)"
     maxWidth="34rem"
     align="center"
@@ -152,6 +164,13 @@ const mosaicImages = GPH_NETWORK.map((venue) => ({
     flex-wrap: wrap;
   }
 
+  .statement {
+    font-size: var(--text-section-xl);
+    color: var(--color-brand-white);
+    max-width: 20ch;
+    margin-inline: auto;
+  }
+
   .band-heading {
     font-size: var(--text-section-xl);
     color: var(--color-brand-white);
@@ -165,89 +184,66 @@ const mosaicImages = GPH_NETWORK.map((venue) => ({
     max-width: 46ch;
   }
 
-  .full-bleed[data-align='center'] .band-body {
+  .full-bleed[data-align='center'] .band-body,
+  .full-bleed[data-align='center'] .statement {
     margin-inline: auto;
   }
 
-  .section-inner {
-    max-width: 88rem;
+  .culture {
+    background-color: var(--color-brand-paper-dark);
+    padding-block: var(--spacing-section-lg);
+  }
+
+  .culture-inner {
+    max-width: 44rem;
     margin-inline: auto;
     padding-inline: 1.5rem;
-    padding-block: var(--spacing-section);
+    text-align: center;
+    margin-bottom: 3.5rem;
   }
 
-  .section-header,
-  .leadership-header {
-    margin-bottom: 3rem;
-    max-width: 36rem;
-  }
-
-  .section-header .eyebrow,
-  .leadership-header .eyebrow {
+  .culture-inner .eyebrow {
     color: var(--color-brand-brass);
   }
 
-  .section-header h2,
-  .leadership-header h2 {
+  .culture-inner h2 {
     font-size: var(--text-section);
+    margin-bottom: 1.25rem;
   }
 
-  .concepts-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.5rem;
-  }
-
-  .leadership-teaser {
-    background-color: var(--color-brand-paper-dark);
-  }
-
-  .leadership-list {
-    list-style: none;
-    margin: 0 0 2.5rem;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.5rem 2rem;
-  }
-
-  .leadership-chip {
-    padding-block: 1.25rem;
-    border-top: 1px solid rgba(26, 26, 23, 0.12);
-  }
-
-  .member-name {
-    display: block;
-    font-family: var(--font-display);
-    font-size: var(--text-lg);
-    font-weight: 500;
-    color: var(--color-brand-ink);
-  }
-
-  .member-role {
-    display: block;
-    font-size: var(--text-xs);
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
+  .culture-body {
+    font-size: var(--text-editorial);
     color: var(--color-brand-ink-light);
-    margin-top: 0.35rem;
+    margin-bottom: 1.75rem;
   }
 
-  @media (max-width: 60rem) {
-    .concepts-grid,
-    .leadership-list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .culture-strip {
+    max-width: 88rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .culture-tile {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .culture-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   @media (max-width: 40rem) {
-    .concepts-grid,
-    .leadership-list {
-      grid-template-columns: 1fr;
-    }
-
     .hero-heading {
       max-width: 100%;
+    }
+
+    .culture-strip {
+      grid-template-columns: 1fr;
     }
   }
 </style>

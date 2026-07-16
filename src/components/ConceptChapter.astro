@@ -1,0 +1,126 @@
+---
+interface Props {
+  name: string;
+  url: string;
+  index: number;
+  hero: string;
+  supporting?: string[];
+  reverse?: boolean;
+}
+const { name, url, index, hero, supporting = [], reverse = false } = Astro.props;
+---
+<section class="chapter" data-reverse={reverse}>
+  <div class="chapter-inner">
+    <div class="chapter-hero">
+      <img src={hero} alt={name} loading="lazy" />
+    </div>
+    <div class="chapter-side">
+      <div class="chapter-heading">
+        <span class="index">{String(index).padStart(2, '0')}</span>
+        <h2>{name}</h2>
+        <a href={url} class="btn btn-outline-ink">Visit site</a>
+      </div>
+      {supporting.length > 0 && (
+        <div class="chapter-support" data-count={supporting.length}>
+          {supporting.map((src) => (
+            <div class="support-tile">
+              <img src={src} alt="" loading="lazy" />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .chapter {
+    background-color: var(--color-brand-paper);
+    padding-block: var(--spacing-section-lg);
+  }
+
+  .chapter-inner {
+    max-width: 88rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .chapter[data-reverse='true'] .chapter-inner {
+    grid-template-columns: 1fr 1.4fr;
+  }
+
+  .chapter[data-reverse='true'] .chapter-hero {
+    order: 2;
+  }
+
+  .chapter-hero {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+  }
+
+  .chapter-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .chapter-side {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-top: 1rem;
+  }
+
+  .index {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-brand-brass);
+    margin-bottom: 1rem;
+  }
+
+  .chapter-heading h2 {
+    font-size: var(--text-section);
+    margin-bottom: 1.5rem;
+  }
+
+  .chapter-support {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .chapter-support[data-count='1'] {
+    grid-template-columns: 1fr;
+  }
+
+  .support-tile {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+  }
+
+  .support-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 60rem) {
+    .chapter-inner,
+    .chapter[data-reverse='true'] .chapter-inner {
+      grid-template-columns: 1fr;
+    }
+
+    .chapter[data-reverse='true'] .chapter-hero {
+      order: initial;
+    }
+
+    .chapter-hero {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>
