@@ -21,6 +21,7 @@ const imageSlugs: Record<string, string> = {
 const mosaicImages = GPH_NETWORK.map((venue) => ({
   src: `/images/concept-${imageSlugs[venue.name]}.webp`,
   alt: venue.name,
+  name: venue.name,
 }));
 ---
 <BaseLayout
@@ -47,9 +48,9 @@ const mosaicImages = GPH_NETWORK.map((venue) => ({
   <EditorialSplit
     eyebrow="How it started"
     body={company.whatSection}
-    imageSrc="/images/cococabana-neon-swing.webp"
-    imageAlt="Neon sign and hanging greenery at a Grind & Prosper Hospitality venue"
-    imageZoom={1.12}
+    imageSrc="/images/venue-neon-palm-rooftop.webp"
+    imageAlt="Guest enjoying a cocktail beneath a neon palm sign on a rooftop at a Grind & Prosper Hospitality venue"
+    imageZoom={1.05}
     ctaLabel="Read our story"
     ctaHref="/about"
   >
