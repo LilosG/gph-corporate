@@ -2,8 +2,21 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import FullBleedBand from '../../components/FullBleedBand.astro';
 import ImageStrip from '../../components/ImageStrip.astro';
+import VenueInfoBar from '../../components/VenueInfoBar.astro';
 import { GPH_NETWORK } from '../../data/gphNetwork';
-import { VENUE_PAGES } from '../../data/venuePages';
+import { VENUE_PAGES, INTERLUDE_IMAGES } from '../../data/venuePages';
+
+// Closing CTA band backgrounds — offset from the interlude indices already
+// used on the home page (0, 3, 6) so a visitor moving from home → venue
+// page never sees the same atmosphere shot twice in a row.
+const CTA_INTERLUDE_INDEX: Record<string, number> = {
+  'the-lobby-tiki-bar': 1,
+  'coco-cabana': 2,
+  "miss-bs-coconut-club": 4,
+  'park-101': 5,
+  'coco-maya': 7,
+  'louisiana-purchase': 8,
+};
 
 export function getStaticPaths() {
   return VENUE_PAGES.map((venue) => ({
@@ -15,6 +28,7 @@ export function getStaticPaths() {
 const { venue } = Astro.props;
 const network = GPH_NETWORK.find((v) => v.name === venue.name);
 const liveUrl = network?.url ?? '#';
+const ctaImage = INTERLUDE_IMAGES[CTA_INTERLUDE_INDEX[venue.slug] ?? 0];
 ---
 <BaseLayout
   title={venue.name}
@@ -25,7 +39,7 @@ const liveUrl = network?.url ?? '#';
     src={venue.hero}
     alt={venue.heroAlt}
     minHeight="var(--min-h-hero)"
-    maxWidth="40rem"
+    maxWidth="42rem"
     scrim="bottom"
   >
     <p class="eyebrow">{venue.neighborhood}</p>
@@ -39,17 +53,20 @@ const liveUrl = network?.url ?? '#';
     </div>
   </FullBleedBand>
 
+  <VenueInfoBar neighborhood={venue.neighborhood} address={venue.address} phone={venue.phone} />
+
   {venue.supporting.length > 0 && (
     <section class="support-section">
       <div class="support-inner">
         <p class="eyebrow">The space</p>
+        <h2 class="support-heading">Inside {venue.name}</h2>
         <ImageStrip images={venue.supporting} alt={`${venue.name} venue photography`} />
       </div>
     </section>
   )}
 
   <FullBleedBand
-    src={venue.hero}
+    src={ctaImage}
     minHeight="var(--min-h-panel)"
     maxWidth="30rem"
     align="center"
@@ -58,11 +75,14 @@ const liveUrl = network?.url ?? '#';
     <p class="eyebrow">Part of the GPH family</p>
     <h2 class="band-heading">See it for yourself.</h2>
     <p class="band-body">
-      Menu, hours, reservations, and everything else lives on {venue.name}'s own site.
+      Full menu, hours, and reservations live on {venue.name}'s own site — {venue.address}.
     </p>
-    <a href={liveUrl} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-      Visit {venue.name} &rarr;
-    </a>
+    <div class="cta-actions">
+      <a href={liveUrl} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+        Visit {venue.name} &rarr;
+      </a>
+      <a href="/concepts" class="btn btn-outline-cream">See all six concepts</a>
+    </div>
   </FullBleedBand>
 </BaseLayout>
 
@@ -91,10 +111,15 @@ const liveUrl = network?.url ?? '#';
     margin-bottom: 2rem;
   }
 
-  .hero-actions {
+  .hero-actions,
+  .cta-actions {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+  }
+
+  .cta-actions {
+    justify-content: center;
   }
 
   .support-section {
@@ -111,6 +136,13 @@ const liveUrl = network?.url ?? '#';
   .support-inner .eyebrow {
     color: var(--color-brand-brass);
     padding-inline: 0;
+    margin-bottom: 0.75rem;
+  }
+
+  .support-heading {
+    font-size: var(--text-section);
+    color: var(--color-brand-ink);
+    margin-bottom: 2rem;
   }
 
   .band-heading {
@@ -125,5 +157,23 @@ const liveUrl = network?.url ?? '#';
     margin-bottom: 2rem;
     max-width: 40ch;
     margin-inline: auto;
+  }
+
+  .btn-outline-cream {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid rgba(247, 243, 234, 0.4);
+    color: var(--color-brand-white);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .btn-outline-cream:hover {
+    border-color: var(--color-brand-white);
+    background-color: rgba(247, 243, 234, 0.08);
   }
 </style>
