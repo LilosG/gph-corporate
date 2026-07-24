@@ -2,23 +2,42 @@
 interface MosaicImage {
   src: string;
   alt: string;
+  name?: string;
 }
 interface Props {
   images: MosaicImage[];
   eyebrow?: string;
+  /** 'bento' (default) — one feature tile + 5 supporting, hand-tuned for 6 images.
+   *  'rail' — horizontal scroll-snap gallery walkthrough.
+   *  'even' — uniform grid fallback for any other image count. */
+  variant?: 'bento' | 'rail' | 'even';
 }
-const { images, eyebrow } = Astro.props;
+const { images, eyebrow, variant = 'bento' } = Astro.props;
+
+// Bento's named-area layout is hand-tuned for exactly six images. If this
+// component is ever fed a different count while set to 'bento', fall back
+// to the even grid rather than silently breaking the layout.
+const resolvedVariant = variant === 'bento' && images.length !== 6 ? 'even' : variant;
 ---
-<section class="mosaic">
-  {eyebrow && (
-    <div class="mosaic-eyebrow-wrap">
-      <p class="eyebrow">{eyebrow}</p>
-    </div>
-  )}
-  <div class="mosaic-grid">
-    {images.map((img) => (
-      <div class="mosaic-tile">
+<section class="mosaic" data-variant={resolvedVariant}>
+  <div class="mosaic-header">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    {resolvedVariant === 'rail' && <p class="scroll-hint" aria-hidden="true">Scroll &rarr;</p>}
+  </div>
+  <div
+    class:list={['mosaic-grid', resolvedVariant]}
+    role={resolvedVariant === 'rail' ? 'region' : undefined}
+    aria-label={resolvedVariant === 'rail' ? 'Venue photo gallery' : undefined}
+  >
+    {images.map((img, i) => (
+      <div class="mosaic-tile" data-slot={resolvedVariant === 'bento' ? `t${i + 1}` : undefined}>
         <img src={img.src} alt={img.alt} loading="lazy" />
+        {img.name && (
+          <>
+            <div class="tile-scrim"></div>
+            <span class="tile-name">{img.name}</span>
+          </>
+        )}
       </div>
     ))}
   </div>
@@ -30,11 +49,18 @@ const { images, eyebrow } = Astro.props;
     padding-block: var(--spacing-section);
   }
 
-  .mosaic-eyebrow-wrap {
+  .mosaic[data-variant='rail'] {
+    overflow: hidden;
+  }
+
+  .mosaic-header {
     max-width: 88rem;
     margin-inline: auto;
     padding-inline: 1.5rem;
     margin-bottom: 1.5rem;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
   }
 
   .eyebrow {
@@ -45,18 +71,88 @@ const { images, eyebrow } = Astro.props;
     color: var(--color-brand-brass-light);
   }
 
+  .scroll-hint {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: rgba(247, 243, 234, 0.45);
+  }
+
   .mosaic-grid {
     max-width: 88rem;
     margin-inline: auto;
     padding-inline: 1.5rem;
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 0.5rem;
   }
 
-  .mosaic-tile {
+  /* ─── Bento: one feature tile, two medium, three small ───────
+     6 cols x 6 rows. t1 is the feature (4x4 — near-square, carries
+     the strongest photo). t2/t3 stack on the right at 2x2 each.
+     t4/t5/t6 run along the bottom at 2x2 each. ────────────────── */
+  .mosaic-grid.bento {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-rows: repeat(6, minmax(0, 1fr));
+    grid-template-areas:
+      't1 t1 t1 t1 t2 t2'
+      't1 t1 t1 t1 t2 t2'
+      't1 t1 t1 t1 t3 t3'
+      't1 t1 t1 t1 t3 t3'
+      't4 t4 t5 t5 t6 t6'
+      't4 t4 t5 t5 t6 t6';
+    aspect-ratio: 16 / 9;
+  }
+
+  .mosaic-grid.bento .mosaic-tile[data-slot='t1'] { grid-area: t1; }
+  .mosaic-grid.bento .mosaic-tile[data-slot='t2'] { grid-area: t2; }
+  .mosaic-grid.bento .mosaic-tile[data-slot='t3'] { grid-area: t3; }
+  .mosaic-grid.bento .mosaic-tile[data-slot='t4'] { grid-area: t4; }
+  .mosaic-grid.bento .mosaic-tile[data-slot='t5'] { grid-area: t5; }
+  .mosaic-grid.bento .mosaic-tile[data-slot='t6'] { grid-area: t6; }
+
+  .mosaic-grid.bento .mosaic-tile {
+    aspect-ratio: auto;
+    height: 100%;
+  }
+
+  /* ─── Even fallback — uniform grid for any count other than six. ─── */
+  .mosaic-grid.even {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .mosaic-grid.even .mosaic-tile {
     grid-column: span 2;
     aspect-ratio: var(--aspect-portrait);
+  }
+
+  /* ─── Cinematic rail — wide landscape tiles, horizontal scroll,
+     snap-to-tile. Deliberately not a grid: this variant's job is to
+     feel like a gallery walk-through, distinct from every stacked
+     card grid elsewhere on the site. ──────────────────────────── */
+  .mosaic-grid.rail {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1.5rem;
+    padding-bottom: 0.5rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .mosaic-grid.rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mosaic-grid.rail .mosaic-tile {
+    flex: 0 0 auto;
+    width: min(70vw, 34rem);
+    aspect-ratio: 4 / 3;
+    scroll-snap-align: start;
+  }
+
+  .mosaic-tile {
+    position: relative;
     overflow: hidden;
   }
 
@@ -71,19 +167,81 @@ const { images, eyebrow } = Astro.props;
     transform: scale(1.04);
   }
 
+  .tile-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15, 15, 13, 0) 55%, rgba(15, 15, 13, 0.8) 100%);
+    pointer-events: none;
+  }
+
+  .tile-name {
+    position: absolute;
+    left: 1rem;
+    bottom: 0.9rem;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--color-brand-white);
+  }
+
+  .mosaic-grid.bento .mosaic-tile[data-slot='t4'] .tile-name,
+  .mosaic-grid.bento .mosaic-tile[data-slot='t5'] .tile-name,
+  .mosaic-grid.bento .mosaic-tile[data-slot='t6'] .tile-name {
+    font-size: var(--text-base);
+  }
+
   @media (max-width: 60rem) {
-    .mosaic-grid {
+    .mosaic-grid.bento {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-rows: repeat(8, minmax(0, 1fr));
+      grid-template-areas:
+        't1 t1 t1 t1'
+        't1 t1 t1 t1'
+        't1 t1 t1 t1'
+        't2 t2 t3 t3'
+        't2 t2 t3 t3'
+        't4 t4 t5 t5'
+        't4 t4 t5 t5'
+        't6 t6 t6 t6';
+      aspect-ratio: auto;
     }
 
-    .mosaic-tile {
-      grid-column: span 2;
+    .mosaic-grid.bento .mosaic-tile { aspect-ratio: 4 / 3; height: auto; }
+
+    .mosaic-grid.even {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 40rem) {
-    .mosaic-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .mosaic-grid.bento {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        't1'
+        't2'
+        't3'
+        't4'
+        't5'
+        't6';
+      aspect-ratio: auto;
+    }
+
+    .mosaic-grid.bento .mosaic-tile {
+      aspect-ratio: 4 / 3;
+      height: auto;
+    }
+
+    .mosaic-grid.even {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .mosaic-grid.rail .mosaic-tile {
+      width: 82vw;
+      aspect-ratio: 4 / 3;
+    }
+
+    .scroll-hint {
+      display: none;
     }
   }
 </style>

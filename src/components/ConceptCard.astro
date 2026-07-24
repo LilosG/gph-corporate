@@ -4,13 +4,16 @@ interface Props {
   url: string;
   index: number;
   imageSlug?: string;
+  image?: string;
+  ctaLabel?: string;
 }
-const { name, url, index, imageSlug } = Astro.props;
-const hasImage = Boolean(imageSlug);
+const { name, url, index, imageSlug, image, ctaLabel = 'Visit site' } = Astro.props;
+const resolvedImage = image ?? (imageSlug ? `/images/concept-${imageSlug}.webp` : undefined);
+const hasImage = Boolean(resolvedImage);
 ---
 <a href={url} class="concept-card">
   {hasImage ? (
-    <img src={`/images/concept-${imageSlug}.webp`} alt={name} loading="lazy" class="card-image" />
+    <img src={resolvedImage} alt={name} loading="lazy" class="card-image" />
   ) : (
     <div class="pending-bg" aria-hidden="true"></div>
   )}
@@ -19,7 +22,7 @@ const hasImage = Boolean(imageSlug);
   <div class="card-content">
     <h3>{name}</h3>
     {hasImage ? (
-      <span class="visit">Visit site &rarr;</span>
+      <span class="visit">{ctaLabel} &rarr;</span>
     ) : (
       <span class="visit pending-label">Photography pending</span>
     )}

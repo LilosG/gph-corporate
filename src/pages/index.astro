@@ -8,20 +8,25 @@ import PhotoMosaic from '../components/PhotoMosaic.astro';
 import { GPH_NETWORK } from '../data/gphNetwork';
 import { company } from '../data/company';
 import { team } from '../data/team';
+import { VENUE_PAGES, INTERLUDE_IMAGES } from '../data/venuePages';
 
-const imageSlugs: Record<string, string> = {
-  'Coco Maya': 'coco-maya',
-  'Louisiana Purchase': 'louisiana-purchase',
-  'Coco Cabana': 'cococabana',
-  "Miss B's Coconut Club": 'miss-bs-coconut-club',
-  'Park 101': 'park-101',
-  'The Lobby Tiki Bar': 'lobby-tiki-bar',
-};
+const venuesByName = Object.fromEntries(VENUE_PAGES.map((v) => [v.name, v]));
 
+// Each venue's dedicated hero photo — real per-venue photography, not the
+// single shared concept-*.webp pool, so no image repeats within this section.
 const mosaicImages = GPH_NETWORK.map((venue) => ({
-  src: `/images/concept-${imageSlugs[venue.name]}.webp`,
-  alt: venue.name,
+  src: venuesByName[venue.name].hero,
+  alt: venuesByName[venue.name].heroAlt,
+  name: venue.name,
 }));
+
+// Concept-preview grid uses each venue's first *supporting* shot (falling
+// back to hero only if a venue has no supporting photo yet) so this section
+// never shows the same frame as the mosaic above it.
+const previewImages = GPH_NETWORK.map((venue) => {
+  const v = venuesByName[venue.name];
+  return v.supporting[0] ?? v.hero;
+});
 ---
 <BaseLayout
   title="Grind & Prosper Hospitality"
@@ -47,9 +52,9 @@ const mosaicImages = GPH_NETWORK.map((venue) => ({
   <EditorialSplit
     eyebrow="How it started"
     body={company.whatSection}
-    imageSrc="/images/cococabana-neon-swing.webp"
-    imageAlt="Neon sign and hanging greenery at a Grind & Prosper Hospitality venue"
-    imageZoom={1.12}
+    imageSrc="/images/venue-neon-palm-rooftop.webp"
+    imageAlt="Guest enjoying a cocktail beneath a neon palm sign on a rooftop at a Grind & Prosper Hospitality venue"
+    imageZoom={1.05}
     ctaLabel="Read our story"
     ctaHref="/about"
   >
@@ -57,7 +62,7 @@ const mosaicImages = GPH_NETWORK.map((venue) => ({
   </EditorialSplit>
 
   <FullBleedBand
-    src="/images/concept-miss-bs-coconut-club.webp"
+    src={INTERLUDE_IMAGES[0]}
     minHeight="var(--min-h-panel)"
     maxWidth="32rem"
     scrim="diagonal"
@@ -68,13 +73,13 @@ const mosaicImages = GPH_NETWORK.map((venue) => ({
     <a href="/about" class="btn btn-secondary">Read our story</a>
   </FullBleedBand>
 
-  <PhotoMosaic images={mosaicImages} eyebrow="Six kitchens, six bars, one team" />
+  <PhotoMosaic images={mosaicImages} eyebrow="Six kitchens, six bars, one team" variant="bento" />
 
   <EditorialSplit
     eyebrow="Who we are"
     body={company.whoAndWhySection}
-    imageSrc="/images/concept-park-101.webp"
-    imageAlt="Grind & Prosper Hospitality team at one of the six venues"
+    imageSrc={INTERLUDE_IMAGES[3]}
+    imageAlt="Grind & Prosper Hospitality team culture across the six venues"
     ctaLabel="Meet the team"
     ctaHref="/team"
     reverse={true}
@@ -90,7 +95,13 @@ const mosaicImages = GPH_NETWORK.map((venue) => ({
       </div>
       <div class="concepts-grid">
         {GPH_NETWORK.map((venue, i) => (
-          <ConceptCard name={venue.name} url={venue.url} index={i + 1} imageSlug={imageSlugs[venue.name]} />
+          <ConceptCard
+            name={venue.name}
+            url={`/concepts/${venuesByName[venue.name].slug}`}
+            index={i + 1}
+            image={previewImages[i]}
+            ctaLabel="Explore"
+          />
         ))}
       </div>
     </div>
@@ -115,7 +126,7 @@ const mosaicImages = GPH_NETWORK.map((venue) => ({
   </section>
 
   <FullBleedBand
-    src="/images/concept-cococabana.webp"
+    src={INTERLUDE_IMAGES[6]}
     minHeight="var(--min-h-panel)"
     maxWidth="34rem"
     align="center"

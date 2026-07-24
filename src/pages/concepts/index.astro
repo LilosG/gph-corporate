@@ -1,7 +1,95 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PlaceholderNotice from '../../components/PlaceholderNotice.astro';
+import ConceptCard from '../../components/ConceptCard.astro';
+import { GPH_NETWORK } from '../../data/gphNetwork';
+import { VENUE_PAGES } from '../../data/venuePages';
+
+const venuesByName = Object.fromEntries(VENUE_PAGES.map((v) => [v.name, v]));
 ---
 <BaseLayout title="Concepts" description="Six distinct restaurant concepts across San Diego.">
-  <PlaceholderNotice pageLabel="Concepts" />
+  <section class="concepts-hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Original concepts</p>
+      <h1>Six concepts, one San Diego family</h1>
+      <p class="body-copy">
+        Every GPH venue has its own identity, its own menu, and its own site. Pick one below
+        to see the space and get the details, then head to the live site for hours, menus,
+        and reservations.
+      </p>
+    </div>
+  </section>
+
+  <section class="concepts-grid-section">
+    <div class="grid-inner">
+      {GPH_NETWORK.map((venue, i) => (
+        <ConceptCard
+          name={venue.name}
+          url={`/concepts/${venuesByName[venue.name].slug}`}
+          index={i + 1}
+          image={venuesByName[venue.name].hero}
+          ctaLabel="Explore"
+        />
+      ))}
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .concepts-hero {
+    background-color: var(--color-brand-ink);
+    padding-block: var(--spacing-section-lg);
+  }
+
+  .hero-inner {
+    max-width: 42rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .eyebrow {
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--color-brand-brass-light);
+    margin-bottom: 1.25rem;
+  }
+
+  .concepts-hero h1 {
+    font-size: var(--text-section-xl);
+    color: var(--color-brand-white);
+    margin-bottom: 1.25rem;
+  }
+
+  .concepts-hero .body-copy {
+    font-size: var(--text-lg);
+    color: rgba(247, 243, 234, 0.85);
+    max-width: 46ch;
+  }
+
+  .concepts-grid-section {
+    background-color: var(--color-brand-paper);
+    padding-block: var(--spacing-section);
+  }
+
+  .grid-inner {
+    max-width: 88rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 60rem) {
+    .grid-inner {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .grid-inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
